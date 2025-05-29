@@ -1,0 +1,661 @@
+{
+  "2043843806": {
+    "language": "ru",
+    "saved_words": [],
+    "history": [
+      {
+        "word": "absence",
+        "info": {
+          "synonyms": [
+            "absence_seizure"
+          ],
+          "antonyms": [
+            "presence"
+          ]
+        }
+      },
+      {
+        "word": "dwell",
+        "info": {
+          "synonyms": [
+            "brood",
+            "consist",
+            "harp",
+            "inhabit",
+            "lie",
+            "lie_in",
+            "live",
+            "populate"
+          ],
+          "antonyms": []
+        }
+      },
+      {
+        "word": "general",
+        "info": {
+          "n": {
+            "pos_name": "Noun",
+            "synonyms": [
+              "full_general",
+              "superior_general"
+            ],
+            "antonyms": [
+              "particular",
+              "specific"
+            ],
+            "examples": [
+              "he discussed the general but neglected the particular"
+            ]
+          },
+          "a": {
+            "pos_name": "Adjective",
+            "synonyms": [],
+            "antonyms": [
+              "local",
+              "specific"
+            ],
+            "examples": [
+              "a general anesthetic",
+              "a general rule",
+              "comprehensible to the general reader"
+            ]
+          },
+          "s": {
+            "pos_name": "Adjective Satellite",
+            "synonyms": [
+              "cosmopolitan",
+              "ecumenical",
+              "oecumenical",
+              "universal",
+              "world-wide",
+              "worldwide"
+            ],
+            "antonyms": [],
+            "examples": [
+              "a general description of the merchandise",
+              "an issue of cosmopolitan import",
+              "bearing a general resemblance to the original"
+            ]
+          }
+        }
+      },
+      {
+        "word": "cuddle",
+        "info": {
+          "n": {
+            "pos_name": "Noun",
+            "meanings": [
+              "a close and affectionate (and often prolonged) embrace"
+            ],
+            "synonyms": [
+              {
+                "word": "nestle",
+                "meaning": "a close and affectionate (and often prolonged) embrace",
+                "examples": []
+              },
+              {
+                "word": "snuggle",
+                "meaning": "a close and affectionate (and often prolonged) embrace",
+                "examples": []
+              }
+            ],
+            "antonyms": [],
+            "examples": []
+          },
+          "v": {
+            "pos_name": "Verb",
+            "meanings": [
+              "hold (a person or thing) close, as for affection, comfort, or warmth",
+              "move or arrange oneself in a comfortable and cozy position"
+            ],
+            "synonyms": [
+              {
+                "word": "snuggle",
+                "meaning": "move or arrange oneself in a comfortable and cozy position",
+                "examples": [
+                  "We cuddled against each other to keep warm"
+                ]
+              },
+              {
+                "word": "nestle",
+                "meaning": "move or arrange oneself in a comfortable and cozy position",
+                "examples": [
+                  "We cuddled against each other to keep warm"
+                ]
+              },
+              {
+                "word": "nest",
+                "meaning": "inhabit a nest, usually after building",
+                "examples": [
+                  "birds are nesting outside my window every Spring"
+                ]
+              },
+              {
+                "word": "nuzzle",
+                "meaning": "move or arrange oneself in a comfortable and cozy position",
+                "examples": [
+                  "We cuddled against each other to keep warm"
+                ]
+              },
+              {
+                "word": "draw_close",
+                "meaning": "move or arrange oneself in a comfortable and cozy position",
+                "examples": [
+                  "We cuddled against each other to keep warm"
+                ]
+              }
+            ],
+            "antonyms": [],
+            "examples": [
+              "I cuddled the baby",
+              "The children snuggled into their sleeping bags",
+              "We cuddled against each other to keep warm"
+            ]
+          }
+        }
+      },
+      {
+        "word": "buzz",
+        "info": {
+          "n": {
+            "pos_name": "Noun",
+            "meanings": [
+              "a confusion of activity and gossip",
+              "sound of rapid vibration"
+            ],
+            "synonyms": [
+              {
+                "word": "bombilation",
+                "meaning": "sound of rapid vibration",
+                "examples": [
+                  "the buzz of a bumble bee"
+                ]
+              },
+              {
+                "word": "bombination",
+                "meaning": "sound of rapid vibration",
+                "examples": [
+                  "the buzz of a bumble bee"
+                ]
+              }
+            ],
+            "antonyms": [],
+            "examples": [
+              "the buzz of a bumble bee",
+              "the buzz of excitement was so great that a formal denial was issued"
+            ]
+          },
+          "v": {
+            "pos_name": "Verb",
+            "meanings": [
+              "be noisy with activity",
+              "call with a buzzer",
+              "fly low",
+              "make a buzzing sound"
+            ],
+            "synonyms": [
+              {
+                "word": "bombinate",
+                "meaning": "make a buzzing sound",
+                "examples": [
+                  "bees were buzzing around the hive"
+                ]
+              },
+              {
+                "word": "bombilate",
+                "meaning": "make a buzzing sound",
+                "examples": [
+                  "bees were buzzing around the hive"
+                ]
+              },
+              {
+                "word": "hum",
+                "meaning": "sing with closed lips",
+                "examples": [
+                  "She hummed a melody"
+                ]
+              },
+              {
+                "word": "seethe",
+                "meaning": "be noisy with activity",
+                "examples": [
+                  "This office is buzzing with activity"
+                ]
+              }
+            ],
+            "antonyms": [],
+            "examples": [
+              "Planes buzzed the crowds in the square",
+              "This office is buzzing with activity",
+              "bees were buzzing around the hive"
+            ]
+          }
+        }
+      },
+      {
+        "word": "jar",
+        "info": {
+          "n": {
+            "pos_name": "Noun",
+            "meanings": [
+              "a sudden jarring impact",
+              "a vessel (usually cylindrical) with a wide mouth and without handles",
+              "the quantity contained in a jar"
+            ],
+            "synonyms": [
+              {
+                "word": "jarful",
+                "meaning": "the quantity contained in a jar",
+                "examples": [
+                  "he drank a jar of beer"
+                ]
+              },
+              {
+                "word": "jolt",
+                "meaning": "a sudden jarring impact",
+                "examples": [
+                  "the door closed with a jolt"
+                ]
+              },
+              {
+                "word": "jounce",
+                "meaning": "a sudden jarring impact",
+                "examples": [
+                  "the door closed with a jolt"
+                ]
+              },
+              {
+                "word": "shock",
+                "meaning": "the feeling of distress and disbelief that you have when something bad happens accidentally",
+                "examples": [
+                  "his mother's death left him in a daze"
+                ]
+              }
+            ],
+            "antonyms": [],
+            "examples": [
+              "all the jars and jolts were smoothed out by the shock absorbers",
+              "he drank a jar of beer",
+              "the door closed with a jolt"
+            ]
+          },
+          "v": {
+            "pos_name": "Verb",
+            "meanings": [
+              "affect in a disagreeable way",
+              "be incompatible; be or come into conflict",
+              "move or cause to move with a sudden jerky motion",
+              "place in a cylindrical vessel",
+              "shock physically"
+            ],
+            "synonyms": [
+              {
+                "word": "clash",
+                "meaning": "crash together with violent impact",
+                "examples": [
+                  "The cars collided"
+                ]
+              },
+              {
+                "word": "collide",
+                "meaning": "be incompatible; be or come into conflict",
+                "examples": [
+                  "These colors clash"
+                ]
+              },
+              {
+                "word": "jolt",
+                "meaning": "disturb (someone's) composure",
+                "examples": [
+                  "The audience was jolted by the play"
+                ]
+              },
+              {
+                "word": "shake_up",
+                "meaning": "shock physically",
+                "examples": [
+                  "Georgia was shaken up in the Tech game"
+                ]
+              },
+              {
+                "word": "bump_around",
+                "meaning": "shock physically",
+                "examples": [
+                  "Georgia was shaken up in the Tech game"
+                ]
+              }
+            ],
+            "antonyms": [],
+            "examples": [
+              "Georgia was shaken up in the Tech game",
+              "These colors clash",
+              "This play jarred the audience"
+            ]
+          }
+        }
+      },
+      {
+        "word": "fan",
+        "info": {
+          "n": {
+            "pos_name": "Noun",
+            "meanings": [
+              "a device for creating a current of air by movement of a surface or surfaces",
+              "an ardent follower and admirer",
+              "an enthusiastic devotee of sports"
+            ],
+            "synonyms": [
+              {
+                "word": "sports_fan",
+                "meaning": "an enthusiastic devotee of sports",
+                "examples": []
+              },
+              {
+                "word": "rooter",
+                "meaning": "an enthusiastic devotee of sports",
+                "examples": []
+              },
+              {
+                "word": "buff",
+                "meaning": "bare skin; naked",
+                "examples": [
+                  "swimming in the buff"
+                ]
+              },
+              {
+                "word": "devotee",
+                "meaning": "an ardent follower and admirer",
+                "examples": []
+              },
+              {
+                "word": "lover",
+                "meaning": "a person who loves someone or is loved by someone",
+                "examples": []
+              }
+            ],
+            "antonyms": [],
+            "examples": []
+          },
+          "v": {
+            "pos_name": "Verb",
+            "meanings": [
+              "agitate the air",
+              "make (an emotion) fiercer",
+              "separate the chaff from by using air currents",
+              "strike out (a batter), (of a pitcher)"
+            ],
+            "synonyms": [
+              {
+                "word": "winnow",
+                "meaning": "separate the chaff from by using air currents",
+                "examples": [
+                  "She stood there winnowing chaff all day in the field"
+                ]
+              }
+            ],
+            "antonyms": [],
+            "examples": [
+              "fan hatred"
+            ]
+          }
+        }
+      },
+      {
+        "word": "boss",
+        "info": {
+          "n": {
+            "pos_name": "Noun",
+            "meanings": [
+              "a circular rounded projection or protuberance",
+              "a leader in a political party who controls votes and dictates appointments",
+              "a person responsible for hiring workers",
+              "a person who exercises control and makes decisions",
+              "a person who exercises control over workers",
+              "wild and domestic cattle; in some classifications placed in the subfamily Bovinae or tribe Bovini"
+            ],
+            "synonyms": [
+              {
+                "word": "foreman",
+                "meaning": "a person who exercises control over workers",
+                "examples": [
+                  "if you want to leave early you have to ask the foreman"
+                ]
+              },
+              {
+                "word": "chief",
+                "meaning": "a person who is in charge",
+                "examples": []
+              },
+              {
+                "word": "gaffer",
+                "meaning": "an elderly man",
+                "examples": []
+              },
+              {
+                "word": "honcho",
+                "meaning": "a person who exercises control over workers",
+                "examples": []
+              },
+              {
+                "word": "hirer",
+                "meaning": "a person responsible for hiring workers",
+                "examples": []
+              },
+              {
+                "word": "party_boss",
+                "meaning": "a leader in a political party who controls votes and dictates appointments",
+                "examples": []
+              },
+              {
+                "word": "political_boss",
+                "meaning": "a leader in a political party who controls votes and dictates appointments",
+                "examples": []
+              },
+              {
+                "word": "knob",
+                "meaning": "a circular rounded projection or protuberance",
+                "examples": []
+              },
+              {
+                "word": "Bos",
+                "meaning": "wild and domestic cattle; in some classifications placed in the subfamily Bovinae or tribe Bovini",
+                "examples": []
+              },
+              {
+                "word": "genus_Bos",
+                "meaning": "wild and domestic cattle; in some classifications placed in the subfamily Bovinae or tribe Bovini",
+                "examples": []
+              }
+            ],
+            "antonyms": [],
+            "examples": [
+              "he is his own boss now",
+              "party bosses have a reputation for corruption",
+              "the boss hired three more men for the new job"
+            ]
+          },
+          "v": {
+            "pos_name": "Verb",
+            "meanings": [
+              "raise in a relief"
+            ],
+            "synonyms": [
+              {
+                "word": "emboss",
+                "meaning": "raise in a relief",
+                "examples": []
+              },
+              {
+                "word": "stamp",
+                "meaning": "to mark, or produce an imprint in or on something",
+                "examples": [
+                  "a man whose name is permanently stamped on our maps"
+                ]
+              }
+            ],
+            "antonyms": [],
+            "examples": [
+              "embossed stationery"
+            ]
+          },
+          "s": {
+            "pos_name": "Adjective Satellite",
+            "meanings": [
+              "exceptionally good"
+            ],
+            "synonyms": [
+              {
+                "word": "brag",
+                "meaning": "exceptionally good",
+                "examples": [
+                  "his brag cornfield"
+                ]
+              }
+            ],
+            "antonyms": [],
+            "examples": [
+              "a boss hand at carpentry"
+            ]
+          }
+        }
+      },
+      {
+        "word": "copper",
+        "info": {
+          "n": {
+            "pos_name": "Noun",
+            "meanings": [
+              "a copper penny",
+              "a ductile malleable reddish-brown corrosion-resistant diamagnetic metallic element; occurs in various minerals but is the only metal that occurs abundantly in large masses; used as an electrical and thermal conductor",
+              "a reddish-brown color resembling the color of polished copper",
+              "any of various small butterflies of the family Lycaenidae having coppery wings",
+              "uncomplimentary terms for a policeman"
+            ],
+            "synonyms": [
+              {
+                "word": "Cu",
+                "meaning": "a ductile malleable reddish-brown corrosion-resistant diamagnetic metallic element; occurs in various minerals but is the only metal that occurs abundantly in large masses; used as an electrical and thermal conductor",
+                "examples": []
+              },
+              {
+                "word": "atomic_number_29",
+                "meaning": "a ductile malleable reddish-brown corrosion-resistant diamagnetic metallic element; occurs in various minerals but is the only metal that occurs abundantly in large masses; used as an electrical and thermal conductor",
+                "examples": []
+              },
+              {
+                "word": "bull",
+                "meaning": "a large and strong and heavyset man",
+                "examples": [
+                  "he was a bull of a man"
+                ]
+              },
+              {
+                "word": "cop",
+                "meaning": "uncomplimentary terms for a policeman",
+                "examples": []
+              },
+              {
+                "word": "fuzz",
+                "meaning": "filamentous hairlike growth on a plant",
+                "examples": [
+                  "peach fuzz"
+                ]
+              },
+              {
+                "word": "pig",
+                "meaning": "domestic swine",
+                "examples": []
+              },
+              {
+                "word": "copper_color",
+                "meaning": "a reddish-brown color resembling the color of polished copper",
+                "examples": []
+              }
+            ],
+            "antonyms": [],
+            "examples": []
+          }
+        }
+      },
+      {
+        "word": "gold",
+        "info": {
+          "n": {
+            "pos_name": "Noun",
+            "meanings": [
+              "a deep yellow color",
+              "a soft yellow malleable ductile (trivalent and univalent) metallic element; occurs mainly as nuggets in rocks and alluvial deposits; does not react with most chemicals but is attacked by chlorine and aqua regia",
+              "coins made of gold",
+              "great wealth; --Ben Jonson",
+              "something likened to the metal in brightness or preciousness or superiority etc."
+            ],
+            "synonyms": [
+              {
+                "word": "amber",
+                "meaning": "a deep yellow color",
+                "examples": [
+                  "an amber light illuminated the room"
+                ]
+              },
+              {
+                "word": "Au",
+                "meaning": "a soft yellow malleable ductile (trivalent and univalent) metallic element; occurs mainly as nuggets in rocks and alluvial deposits; does not react with most chemicals but is attacked by chlorine and aqua regia",
+                "examples": []
+              },
+              {
+                "word": "atomic_number_79",
+                "meaning": "a soft yellow malleable ductile (trivalent and univalent) metallic element; occurs mainly as nuggets in rocks and alluvial deposits; does not react with most chemicals but is attacked by chlorine and aqua regia",
+                "examples": []
+              }
+            ],
+            "antonyms": [],
+            "examples": [
+              "Whilst that for which all virtue now is sold, and almost every vice--almighty gold",
+              "he admired the gold of her hair",
+              "she has a heart of gold"
+            ]
+          },
+          "s": {
+            "pos_name": "Adjective Satellite",
+            "meanings": [
+              "having the deep slightly brownish color of gold",
+              "made from or covered with gold"
+            ],
+            "synonyms": [
+              {
+                "word": "golden",
+                "meaning": "having the deep slightly brownish color of gold",
+                "examples": [
+                  "long aureate (or golden) hair"
+                ]
+              },
+              {
+                "word": "gilded",
+                "meaning": "based on pretense; deceptively pleasing",
+                "examples": [
+                  "the gilded and perfumed but inwardly rotten nobility"
+                ]
+              },
+              {
+                "word": "aureate",
+                "meaning": "having the deep slightly brownish color of gold",
+                "examples": []
+              },
+              {
+                "word": "gilt",
+                "meaning": "having the deep slightly brownish color of gold",
+                "examples": []
+              }
+            ],
+            "antonyms": [],
+            "examples": [
+              "a gold carpet",
+              "gold coins",
+              "the gold dome of the Capitol"
+            ]
+          }
+        }
+      }
+    ]
+  }
+}
