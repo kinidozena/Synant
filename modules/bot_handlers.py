@@ -15,7 +15,6 @@ from config import DEFAULT_LANGUAGE, CALLBACK_DATA, SAVE_PATHS_FILE, MAX_SAVED_W
 
 # States for conversation handler
 AWAITING_WORD = 1
-AWAITING_SAVE_PATH = 2
 
 logger = logging.getLogger(__name__)
 
@@ -73,12 +72,25 @@ def set_user_save_path(user_id: int, save_path: str) -> None:
     save_save_paths(paths)
 
 def start_command(update: Update, context: CallbackContext) -> None:
-    """Send a message when the command /start is issued."""
-    user_id = update.effective_user.id
-    lang = get_user_language(user_id)
+    """Send a welcome message when the command /start is issued."""
+    user = update.effective_user
+    user_id = user.id
     
+    # Detect user's language from Telegram settings
+    user_lang_code = update.effective_user.language_code
+    # Map common language codes to our supported languages
+    lang = 'ru' if user_lang_code and user_lang_code.lower().startswith('ru') else 'en'
+    
+    # Save the detected language preference
+    set_user_language(user_id, lang)
+    
+    # Create a personalized welcome message
+    first_name = user.first_name or "there"
+    personal_greeting = f"Hi {first_name}! " if lang == 'en' else f"Привет, {first_name}! "
+    
+    # Send the welcome message
     update.message.reply_text(
-        get_message('welcome', lang),
+        personal_greeting + get_message('welcome', lang),
         reply_markup=get_main_keyboard(lang),
         parse_mode=ParseMode.MARKDOWN
     )
@@ -102,43 +114,98 @@ def process_word_command(update: Update, context: CallbackContext, mode: str) ->
     logger.info(f"Processing word command with mode: {mode}")
     
     if not context.args:
-        update.message.reply_text(
-            get_message('provide_word', lang).format(mode),
-            reply_markup=get_main_keyboard(lang),
-            parse_mode=ParseMode.MARKDOWN
-        )
+        try:
+            update.message.reply_text(
+                get_message('provide_word', lang).format(mode),
+                reply_markup=get_main_keyboard(lang),
+                parse_mode=ParseMode.MARKDOWN
+            )
+        except Exception as e:
+            logger.error(f"Error sending prompt message: {str(e)}")
         return
 
     word = context.args[0].lower()
     logger.info(f"Looking up word: {word}")
     
-    info = get_word_info(word)
-    response = format_word_info(word, info, mode, lang)
-    
-    # Save to user history
-    if info is not None:
-        user_data = load_user_data()
-        user_id_str = str(user_id)
+    try:
+        info = get_word_info(word)
+        logger.info(f"Got word info for '{word}': {'Found' if info else 'Not found'}")
         
-        if user_id_str not in user_data:
-            user_data[user_id_str] = {'history': [], 'language': lang}
-        elif 'history' not in user_data[user_id_str]:
-            user_data[user_id_str]['history'] = []
-            
-        if word not in [item['word'] for item in user_data[user_id_str]['history']]:
-            user_data[user_id_str]['history'].append({
-                'word': word,
-                'info': info
-            })
-            user_data[user_id_str]['history'] = user_data[user_id_str]['history'][-10:]
-            save_user_data(user_data)
+        response = format_word_info(word, info, mode, lang)
+        logger.info(f"Formatted response for '{word}' (length: {len(response)})")
+        
+        # Split response if it's too long
+        MAX_MESSAGE_LENGTH = 4096
+        if len(response) > MAX_MESSAGE_LENGTH:
+            logger.info(f"Response too long ({len(response)} chars), splitting into multiple messages")
+            chunks = [response[i:i + MAX_MESSAGE_LENGTH] for i in range(0, len(response), MAX_MESSAGE_LENGTH)]
+            for chunk in chunks:
+                try:
+                    update.message.reply_text(
+                        chunk,
+                        reply_markup=get_main_keyboard(lang),
+                        parse_mode=ParseMode.MARKDOWN
+                    )
+                except Exception as e:
+                    logger.error(f"Error sending response chunk: {str(e)}")
+        else:
+            try:
+                update.message.reply_text(
+                    response,
+                    reply_markup=get_main_keyboard(lang),
+                    parse_mode=ParseMode.MARKDOWN
+                )
+                logger.info(f"Successfully sent response for '{word}'")
+            except Exception as e:
+                logger.error(f"Error sending response: {str(e)}")
+                # Try sending without markdown if there might be a markdown formatting issue
+                try:
+                    update.message.reply_text(
+                        "Sorry, there was an error formatting the response. Here it is without formatting:\n\n" + 
+                        response.replace('*', '').replace('_', '').replace('`', ''),
+                        reply_markup=get_main_keyboard(lang)
+                    )
+                except Exception as e2:
+                    logger.error(f"Error sending plain text response: {str(e2)}")
+                    # Last resort - send a simple error message
+                    try:
+                        update.message.reply_text(
+                            get_message('error_occurred', lang),
+                            reply_markup=get_main_keyboard(lang)
+                        )
+                    except Exception as e3:
+                        logger.error(f"Failed to send error message: {str(e3)}")
+        
+        # Save to user history
+        if info is not None:
+            try:
+                user_data = load_user_data()
+                user_id_str = str(user_id)
+                
+                if user_id_str not in user_data:
+                    user_data[user_id_str] = {'history': [], 'language': lang}
+                elif 'history' not in user_data[user_id_str]:
+                    user_data[user_id_str]['history'] = []
+                    
+                if word not in [item['word'] for item in user_data[user_id_str]['history']]:
+                    user_data[user_id_str]['history'].append({
+                        'word': word,
+                        'info': info
+                    })
+                    user_data[user_id_str]['history'] = user_data[user_id_str]['history'][-10:]
+                    save_user_data(user_data)
+            except Exception as e:
+                logger.error(f"Error saving to user history: {str(e)}")
     
-    logger.info(f"Sending response for word: {word}")
-    update.message.reply_text(
-        response,
-        reply_markup=get_main_keyboard(lang),
-        parse_mode=ParseMode.MARKDOWN
-    )
+    except Exception as e:
+        logger.error(f"Error processing word '{word}': {str(e)}")
+        try:
+            update.message.reply_text(
+                get_message('error_occurred', lang),
+                reply_markup=get_main_keyboard(lang)
+            )
+        except Exception as e2:
+            logger.error(f"Failed to send error message: {str(e2)}")
 
 def synonym_command(update: Update, context: CallbackContext) -> None:
     """Handle the /synonym command."""
@@ -196,14 +263,6 @@ def button_handler(update: Update, context: CallbackContext) -> int:
             reply_markup=get_main_keyboard(new_lang),
             parse_mode=ParseMode.MARKDOWN
         )
-    elif query.data == CALLBACK_DATA['SETUP_PATH']:
-        context.user_data['awaiting_path'] = True
-        query.edit_message_text(
-            get_message('enter_save_path', lang),
-            reply_markup=get_back_keyboard(lang),
-            parse_mode=ParseMode.MARKDOWN
-        )
-        return AWAITING_SAVE_PATH
     elif query.data == CALLBACK_DATA['SAVE_WORD']:
         context.user_data['mode'] = 'save'
         query.edit_message_text(
@@ -303,10 +362,6 @@ def text_handler(update: Update, context: CallbackContext) -> int:
     
     logger.info(f"Received text: {text}")
     
-    # Check if we're waiting for a save path
-    if 'awaiting_path' in context.user_data:
-        return handle_save_path_setup(update, context, text)
-    
     # Handle word input
     if len(text.split()) > 1:
         update.message.reply_text(
@@ -333,76 +388,6 @@ def text_handler(update: Update, context: CallbackContext) -> int:
     if 'mode' in context.user_data:
         del context.user_data['mode']
     
-    return ConversationHandler.END
-
-def setup_save_path_command(update: Update, context: CallbackContext) -> int:
-    """Set up the save path for words."""
-    user_id = update.effective_user.id
-    lang = get_user_language(user_id)
-    
-    if not context.args:
-        # If no path provided, enter the path input state
-        context.user_data['awaiting_path'] = True
-        update.message.reply_text(
-            get_message('enter_save_path', lang),
-            reply_markup=get_back_keyboard(lang),
-            parse_mode=ParseMode.MARKDOWN
-        )
-        return AWAITING_SAVE_PATH
-
-    save_path = ' '.join(context.args)
-    return handle_save_path_setup(update, context, save_path)
-
-def handle_save_path_setup(update: Update, context: CallbackContext, save_path: str) -> int:
-    """Handle the save path setup process."""
-    user_id = update.effective_user.id
-    lang = get_user_language(user_id)
-    
-    try:
-        # Convert to Path object and resolve to absolute path
-        save_path = Path(save_path).resolve()
-        
-        # Ensure it ends with .json
-        if save_path.suffix != '.json':
-            save_path = save_path.with_suffix('.json')
-
-        # Create parent directories if they don't exist
-        if save_path.parent:
-            save_path.parent.mkdir(parents=True, exist_ok=True)
-        
-        # Try to create/open the file
-        with save_path.open('a+', encoding='utf-8') as f:
-            if f.tell() == 0:  # If file is empty
-                json.dump([], f)
-        
-        # Convert back to string for storage, using forward slashes
-        save_path_str = str(save_path).replace('\\', '/')
-        
-        # Save the path in persistent storage
-        set_user_save_path(user_id, save_path_str)
-        
-        update.message.reply_text(
-            f"✅ Save location has been set to:\n`{save_path_str}`\n\n"
-            "You can now use the /save command to save words!\n"
-            "This path will be remembered even if the bot restarts.",
-            reply_markup=get_main_keyboard(lang),
-            parse_mode=ParseMode.MARKDOWN
-        )
-    except Exception as e:
-        logger.error(f"Error setting up save path: {e}")
-        update.message.reply_text(
-            "❌ Error: Could not set up the save location. Please make sure:\n"
-            "• The path is valid\n"
-            "• You have write permissions\n"
-            "• The directory exists or can be created\n\n"
-            "Example path: `C:/Users/YourName/Documents/saved_words.json`\n"
-            f"Error details: {str(e)}",
-            reply_markup=get_main_keyboard(lang),
-            parse_mode=ParseMode.MARKDOWN
-        )
-    
-    if 'awaiting_path' in context.user_data:
-        del context.user_data['awaiting_path']
     return ConversationHandler.END
 
 def save_word_command(update: Update, context: CallbackContext) -> None:

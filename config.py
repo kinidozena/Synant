@@ -26,7 +26,6 @@ CALLBACK_DATA = {
     'SAVE_WORD': 'save_word',
     'VIEW_SAVED': 'view_saved',
     'DOWNLOAD_SAVED': 'download_saved',  # New callback for downloading saved words
-    'SETUP_PATH': 'setup_path',
     'SWITCH_LANG': 'switch_language',
     'BACK': 'back_to_menu'
 }

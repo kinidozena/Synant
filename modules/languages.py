@@ -6,7 +6,7 @@ from typing import Dict, Any
 MESSAGES = {
     'ru': {
         'welcome': (
-            "*👋 Добро пожаловать в бот синонимов и антонимов!*\n\n"
+            "*Добро пожаловать в бот синонимов и антонимов!*\n\n"
             "Я помогу вам найти синонимы и антонимы для английских слов. "
             "Для каждого слова я покажу его тип (существительное, глагол и т.д.) "
             "и примеры использования.\n\n"
@@ -58,11 +58,15 @@ MESSAGES = {
         'word_saved': "✅ Слово '{}' сохранено!",
         'word_exists': "ℹ️ Слово '{}' уже в списке сохранённых.",
         'max_words_reached': "⚠️ Достигнут лимит в {} слов. Скачайте текущий список, чтобы начать новый.",
-        'download_ready': "📥 Ваш файл с сохранёнными словами готов к скачиванию!"
+        'download_ready': "📥 Ваш файл с сохранёнными словами готов к скачиванию!",
+        'error_occurred': "❌ Произошла ошибка при обработке запроса. Пожалуйста, попробуйте еще раз позже.",
+        'no_synonyms': "❌ Синонимы для слова '{}' не найдены.",
+        'no_antonyms': "❌ Антонимы для слова '{}' не найдены.",
+        'no_results': "❌ Информация для слова '{}' не найдена."
     },
     'en': {
         'welcome': (
-            "*👋 Welcome to the Synonym/Antonym Bot!*\n\n"
+            "*Welcome to the Synonym/Antonym Bot!*\n\n"
             "I can help you find synonyms and antonyms for words. "
             "For each word, I'll show its type (noun, verb, etc.) "
             "and usage examples.\n\n"
@@ -114,7 +118,11 @@ MESSAGES = {
         'word_saved': "✅ Word '{}' has been saved!",
         'word_exists': "ℹ️ Word '{}' is already in your saved list.",
         'max_words_reached': "⚠️ Maximum limit of {} words reached. Download current list to start a new one.",
-        'download_ready': "📥 Your saved words file is ready for download!"
+        'download_ready': "📥 Your saved words file is ready for download!",
+        'error_occurred': "❌ An error occurred while processing your request. Please try again later.",
+        'no_synonyms': "❌ No synonyms found for '{}'.",
+        'no_antonyms': "❌ No antonyms found for '{}'.",
+        'no_results': "❌ No information found for '{}'."
     }
 }
 

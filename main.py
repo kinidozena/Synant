@@ -8,12 +8,12 @@ from telegram.ext import (
     Dispatcher, CommandHandler, MessageHandler, Filters,
     CallbackQueryHandler, ConversationHandler
 )
-from telegram import Update, Bot
+from telegram import Update, Bot, BotCommand
 from config import BOT_TOKEN
 from modules.bot_handlers import (
     start_command, help_command, synonym_command, antonym_command,
     both_command, save_word_command, show_saved_command, text_handler, 
-    button_handler, setup_save_path_command,
+    button_handler,
     AWAITING_WORD, AWAITING_SAVE_PATH
 )
 
@@ -31,6 +31,21 @@ app = Flask(__name__)
 bot = Bot(token=BOT_TOKEN)
 dispatcher = Dispatcher(bot, None, workers=0)
 
+def setup_bot_commands():
+    """Set up the bot's command menu."""
+    commands = [
+        BotCommand("start", "Start the bot and get welcome message"),
+        BotCommand("help", "Show help information"),
+        BotCommand("synonym", "Find synonyms for a word"),
+        BotCommand("antonym", "Find antonyms for a word"),
+        BotCommand("both", "Find both synonyms and antonyms"),
+        BotCommand("save", "Save a word to your list"),
+        BotCommand("saved", "View your saved words"),
+        BotCommand("download", "Download your saved words as a file")
+    ]
+    bot.set_my_commands(commands)
+    logger.info("Bot commands menu has been set up")
+
 # Create conversation handler
 conv_handler = ConversationHandler(
     entry_points=[
@@ -39,9 +54,9 @@ conv_handler = ConversationHandler(
         CommandHandler("synonym", synonym_command),
         CommandHandler("antonym", antonym_command),
         CommandHandler("both", both_command),
-        CommandHandler("setup_path", setup_save_path_command),
         CommandHandler("save", save_word_command),
         CommandHandler("saved", show_saved_command),
+        CommandHandler("download", show_saved_command),
         CallbackQueryHandler(button_handler)
     ],
     states={
@@ -79,6 +94,8 @@ def set_webhook():
     logger.info(f"Webhook set to {webhook_url}")
 
 if __name__ == '__main__':
+    # Set up bot commands menu
+    setup_bot_commands()
     # Set the webhook when running the script
     set_webhook()
     # Run the Flask application
