@@ -16,13 +16,16 @@ MAX_SAVED_WORDS = 10      # Maximum number of words to save in history
 
 # Data storage
 USER_DATA_PATH = "data/user_data.json"
+SAVE_PATHS_FILE = "data/save_paths.json"  # File to store user save paths
 
 # Keyboard callback data
 CALLBACK_DATA = {
     'SYNONYMS': 'get_synonyms',
     'ANTONYMS': 'get_antonyms',
     'BOTH': 'get_both',
-    'SAVED': 'view_saved',
+    'SAVE_WORD': 'save_word',
+    'VIEW_SAVED': 'view_saved',
+    'SETUP_PATH': 'setup_path',
     'SWITCH_LANG': 'switch_language',
     'BACK': 'back_to_menu'
 }

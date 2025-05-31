@@ -19,8 +19,14 @@ def get_main_keyboard(lang: str) -> InlineKeyboardMarkup:
                                callback_data=CALLBACK_DATA['BOTH'])
         ],
         [
+            InlineKeyboardButton(get_message('setup_path', lang), 
+                               callback_data=CALLBACK_DATA['SETUP_PATH']),
+            InlineKeyboardButton(get_message('save_word', lang), 
+                               callback_data=CALLBACK_DATA['SAVE_WORD'])
+        ],
+        [
             InlineKeyboardButton(get_message('view_saved', lang), 
-                               callback_data=CALLBACK_DATA['SAVED']),
+                               callback_data=CALLBACK_DATA['VIEW_SAVED']),
             InlineKeyboardButton(get_message('switch_language', lang), 
                                callback_data=CALLBACK_DATA['SWITCH_LANG'])
         ]
