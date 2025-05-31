@@ -11,7 +11,7 @@ import os
 import logging
 from typing import Dict, Any
 from pathlib import Path
-from config import DEFAULT_LANGUAGE, CALLBACK_DATA, SAVE_PATHS_FILE
+from config import DEFAULT_LANGUAGE, CALLBACK_DATA, SAVE_PATHS_FILE, MAX_SAVED_WORDS
 
 # States for conversation handler
 AWAITING_WORD = 1
@@ -179,7 +179,7 @@ def saved_command(update: Update, context: CallbackContext) -> None:
         parse_mode=ParseMode.MARKDOWN
     )
 
-def button_handler(update: Update, context: CallbackContext) -> None:
+def button_handler(update: Update, context: CallbackContext) -> int:
     """Handle button presses."""
     query = update.callback_query
     user_id = query.from_user.id
@@ -197,6 +197,7 @@ def button_handler(update: Update, context: CallbackContext) -> None:
             parse_mode=ParseMode.MARKDOWN
         )
     elif query.data == CALLBACK_DATA['SETUP_PATH']:
+        context.user_data['awaiting_path'] = True
         query.edit_message_text(
             get_message('enter_save_path', lang),
             reply_markup=get_back_keyboard(lang),
@@ -204,31 +205,67 @@ def button_handler(update: Update, context: CallbackContext) -> None:
         )
         return AWAITING_SAVE_PATH
     elif query.data == CALLBACK_DATA['SAVE_WORD']:
-        save_path = get_user_save_path(user_id)
-        if not save_path:
-            query.edit_message_text(
-                get_message('setup_path_first', lang),
-                reply_markup=get_main_keyboard(lang),
-                parse_mode=ParseMode.MARKDOWN
-            )
-        else:
-            context.user_data['mode'] = 'save'
-            query.edit_message_text(
-                get_message('enter_word_save', lang),
-                reply_markup=get_back_keyboard(lang),
-                parse_mode=ParseMode.MARKDOWN
-            )
-            return AWAITING_WORD
+        context.user_data['mode'] = 'save'
+        query.edit_message_text(
+            get_message('provide_word', lang).format('save'),
+            reply_markup=get_back_keyboard(lang),
+            parse_mode=ParseMode.MARKDOWN
+        )
+        return AWAITING_WORD
     elif query.data == CALLBACK_DATA['VIEW_SAVED']:
         # Create a message object for show_saved_command
         message = type('Message', (), {})()
         message.reply_text = query.edit_message_text
         update.message = message
         show_saved_command(update, context)
+    elif query.data == CALLBACK_DATA['DOWNLOAD_SAVED']:
+        # For download, we need to send a new message instead of editing
+        temp_file = f'data/temp/saved_words_{user_id}.json'
+        
+        try:
+            if not os.path.exists(temp_file):
+                query.message.reply_text(
+                    get_message('saved_words_empty', lang),
+                    reply_markup=get_main_keyboard(lang),
+                    parse_mode=ParseMode.MARKDOWN
+                )
+                return ConversationHandler.END
+                
+            with open(temp_file, 'r', encoding='utf-8') as f:
+                try:
+                    saved_words = json.load(f)
+                    if not isinstance(saved_words, list):
+                        saved_words = []
+                except json.JSONDecodeError:
+                    saved_words = []
+                
+            if not saved_words:
+                query.message.reply_text(
+                    get_message('saved_words_empty', lang),
+                    reply_markup=get_main_keyboard(lang),
+                    parse_mode=ParseMode.MARKDOWN
+                )
+                return ConversationHandler.END
+                
+            # Send the file as a new message
+            with open(temp_file, 'rb') as f:
+                query.message.reply_document(
+                    document=f,
+                    filename=f'saved_words.json',
+                    caption=get_message('download_ready', lang)
+                )
+                
+        except Exception as e:
+            logger.error(f"Error downloading saved words: {e}")
+            query.message.reply_text(
+                f"❌ Error downloading your saved words. Please try again later.\nError details: {str(e)}",
+                reply_markup=get_main_keyboard(lang),
+                parse_mode=ParseMode.MARKDOWN
+            )
     elif query.data == CALLBACK_DATA['SYNONYMS']:
         context.user_data['mode'] = 'synonym'
         query.edit_message_text(
-            get_message('enter_word', lang),
+            get_message('provide_word', lang).format('synonym'),
             reply_markup=get_back_keyboard(lang),
             parse_mode=ParseMode.MARKDOWN
         )
@@ -236,7 +273,7 @@ def button_handler(update: Update, context: CallbackContext) -> None:
     elif query.data == CALLBACK_DATA['ANTONYMS']:
         context.user_data['mode'] = 'antonym'
         query.edit_message_text(
-            get_message('enter_word', lang),
+            get_message('provide_word', lang).format('antonym'),
             reply_markup=get_back_keyboard(lang),
             parse_mode=ParseMode.MARKDOWN
         )
@@ -244,7 +281,7 @@ def button_handler(update: Update, context: CallbackContext) -> None:
     elif query.data == CALLBACK_DATA['BOTH']:
         context.user_data['mode'] = 'both'
         query.edit_message_text(
-            get_message('enter_word', lang),
+            get_message('provide_word', lang).format('both'),
             reply_markup=get_back_keyboard(lang),
             parse_mode=ParseMode.MARKDOWN
         )
@@ -258,7 +295,7 @@ def button_handler(update: Update, context: CallbackContext) -> None:
     
     return ConversationHandler.END
 
-def text_handler(update: Update, context: CallbackContext) -> None:
+def text_handler(update: Update, context: CallbackContext) -> int:
     """Handle regular text messages."""
     text = update.message.text.strip()
     user_id = update.effective_user.id
@@ -267,39 +304,8 @@ def text_handler(update: Update, context: CallbackContext) -> None:
     logger.info(f"Received text: {text}")
     
     # Check if we're waiting for a save path
-    if context.user_data.get('awaiting_path'):
-        try:
-            # Create directory if it doesn't exist
-            os.makedirs(os.path.dirname(text), exist_ok=True)
-            
-            # Try to create/open the file
-            with open(text, 'a+', encoding='utf-8') as f:
-                if f.tell() == 0:  # If file is empty
-                    json.dump([], f)
-            
-            # Save the path in persistent storage
-            set_user_save_path(user_id, text)
-            
-            update.message.reply_text(
-                f"✅ Save location has been set to:\n`{text}`\n\n"
-                "You can now use the /save command to save words!\n"
-                "This path will be remembered even if the bot restarts.",
-                reply_markup=get_main_keyboard(lang),
-                parse_mode=ParseMode.MARKDOWN
-            )
-        except Exception as e:
-            logger.error(f"Error setting up save path: {e}")
-            update.message.reply_text(
-                "❌ Error: Could not set up the save location. Please make sure:\n"
-                "• The path is valid\n"
-                "• You have write permissions\n"
-                "• The directory exists or can be created",
-                reply_markup=get_main_keyboard(lang),
-                parse_mode=ParseMode.MARKDOWN
-            )
-        
-        del context.user_data['awaiting_path']
-        return ConversationHandler.END
+    if 'awaiting_path' in context.user_data:
+        return handle_save_path_setup(update, context, text)
     
     # Handle word input
     if len(text.split()) > 1:
@@ -311,7 +317,7 @@ def text_handler(update: Update, context: CallbackContext) -> None:
         return ConversationHandler.END
     
     # Set the word as an argument for the command handlers
-    context.args = [text]
+    context.args = [text.lower()]  # Ensure word is lowercase
     
     # Get the current mode, defaulting to 'both' if not set
     mode = context.user_data.get('mode', 'both')
@@ -335,31 +341,48 @@ def setup_save_path_command(update: Update, context: CallbackContext) -> int:
     lang = get_user_language(user_id)
     
     if not context.args:
+        # If no path provided, enter the path input state
+        context.user_data['awaiting_path'] = True
         update.message.reply_text(
-            "Please provide the full path where you want to save your words.\n"
-            "Example: /setup_path C:/Users/YourName/Documents/saved_words.json\n"
-            "Make sure you have write permissions for this location.",
-            reply_markup=get_main_keyboard(lang),
+            get_message('enter_save_path', lang),
+            reply_markup=get_back_keyboard(lang),
             parse_mode=ParseMode.MARKDOWN
         )
-        return ConversationHandler.END
+        return AWAITING_SAVE_PATH
 
     save_path = ' '.join(context.args)
+    return handle_save_path_setup(update, context, save_path)
+
+def handle_save_path_setup(update: Update, context: CallbackContext, save_path: str) -> int:
+    """Handle the save path setup process."""
+    user_id = update.effective_user.id
+    lang = get_user_language(user_id)
     
     try:
-        # Create directory if it doesn't exist
-        os.makedirs(os.path.dirname(save_path), exist_ok=True)
+        # Convert to Path object and resolve to absolute path
+        save_path = Path(save_path).resolve()
+        
+        # Ensure it ends with .json
+        if save_path.suffix != '.json':
+            save_path = save_path.with_suffix('.json')
+
+        # Create parent directories if they don't exist
+        if save_path.parent:
+            save_path.parent.mkdir(parents=True, exist_ok=True)
         
         # Try to create/open the file
-        with open(save_path, 'a+', encoding='utf-8') as f:
+        with save_path.open('a+', encoding='utf-8') as f:
             if f.tell() == 0:  # If file is empty
                 json.dump([], f)
         
+        # Convert back to string for storage, using forward slashes
+        save_path_str = str(save_path).replace('\\', '/')
+        
         # Save the path in persistent storage
-        set_user_save_path(user_id, save_path)
+        set_user_save_path(user_id, save_path_str)
         
         update.message.reply_text(
-            f"✅ Save location has been set to:\n`{save_path}`\n\n"
+            f"✅ Save location has been set to:\n`{save_path_str}`\n\n"
             "You can now use the /save command to save words!\n"
             "This path will be remembered even if the bot restarts.",
             reply_markup=get_main_keyboard(lang),
@@ -371,29 +394,22 @@ def setup_save_path_command(update: Update, context: CallbackContext) -> int:
             "❌ Error: Could not set up the save location. Please make sure:\n"
             "• The path is valid\n"
             "• You have write permissions\n"
-            "• The directory exists or can be created",
+            "• The directory exists or can be created\n\n"
+            "Example path: `C:/Users/YourName/Documents/saved_words.json`\n"
+            f"Error details: {str(e)}",
             reply_markup=get_main_keyboard(lang),
             parse_mode=ParseMode.MARKDOWN
         )
     
+    if 'awaiting_path' in context.user_data:
+        del context.user_data['awaiting_path']
     return ConversationHandler.END
 
 def save_word_command(update: Update, context: CallbackContext) -> None:
-    """Save a word to the user's save file."""
+    """Save a word to the temporary file."""
     user_id = update.effective_user.id
     lang = get_user_language(user_id)
-    save_path = get_user_save_path(user_id)
     
-    if not save_path:
-        update.message.reply_text(
-            "⚠️ You need to set up a save location first!\n\n"
-            "Use the /setup_path command followed by your desired save location.\n"
-            "Example: `/setup_path C:/Users/YourName/Documents/saved_words.json`",
-            reply_markup=get_main_keyboard(lang),
-            parse_mode=ParseMode.MARKDOWN
-        )
-        return
-
     if not context.args:
         update.message.reply_text(
             get_message('provide_word', lang).format('save'),
@@ -414,85 +430,128 @@ def save_word_command(update: Update, context: CallbackContext) -> None:
         return
     
     try:
-        # Read existing words
+        # Create data directory if it doesn't exist
+        os.makedirs('data/temp', exist_ok=True)
+        
+        # Create a temporary file for this user
+        temp_file = f'data/temp/saved_words_{user_id}.json'
+        
+        # Read existing words or create new list
         try:
-            with open(save_path, 'r', encoding='utf-8') as f:
-                saved_words = json.load(f)
-        except (FileNotFoundError, json.JSONDecodeError):
+            if os.path.exists(temp_file):
+                with open(temp_file, 'r', encoding='utf-8') as f:
+                    saved_words = json.load(f)
+                    if not isinstance(saved_words, list):
+                        saved_words = []
+            else:
+                saved_words = []
+        except json.JSONDecodeError:
             saved_words = []
             
         # Check if word already exists
-        if word not in [item['word'] for item in saved_words]:
-            saved_words.append({
-                'word': word,
-                'synonyms': info['synonyms'],
-                'antonyms': info['antonyms']
-            })
-            
-            with open(save_path, 'w', encoding='utf-8') as f:
-                json.dump(saved_words, f, indent=2, ensure_ascii=False)
-            
+        if any(item.get('word') == word for item in saved_words):
             update.message.reply_text(
-                f"✅ The word '{word}' has been saved!",
+                get_message('word_exists', lang).format(word),
                 reply_markup=get_main_keyboard(lang),
                 parse_mode=ParseMode.MARKDOWN
             )
-        else:
+            return
+            
+        # Check if maximum limit reached
+        if len(saved_words) >= MAX_SAVED_WORDS:
             update.message.reply_text(
-                f"ℹ️ The word '{word}' is already in your saved list.",
+                get_message('max_words_reached', lang).format(MAX_SAVED_WORDS),
                 reply_markup=get_main_keyboard(lang),
                 parse_mode=ParseMode.MARKDOWN
             )
+            return
+            
+        # Extract synonyms and antonyms from all parts of speech
+        all_synonyms = []
+        all_antonyms = []
+        
+        # Iterate through each part of speech
+        for pos_data in info.values():
+            # Add synonyms
+            for syn in pos_data.get('synonyms', []):
+                if isinstance(syn, dict) and 'word' in syn:
+                    all_synonyms.append(syn['word'])
+                elif isinstance(syn, str):
+                    all_synonyms.append(syn)
+            
+            # Add antonyms
+            for ant in pos_data.get('antonyms', []):
+                if isinstance(ant, dict) and 'word' in ant:
+                    all_antonyms.append(ant['word'])
+                elif isinstance(ant, str):
+                    all_antonyms.append(ant)
+        
+        # Add the new word with unique synonyms and antonyms
+        saved_words.append({
+            'word': word,
+            'synonyms': list(dict.fromkeys(all_synonyms)),
+            'antonyms': list(dict.fromkeys(all_antonyms))
+        })
+        
+        # Save the updated list
+        with open(temp_file, 'w', encoding='utf-8') as f:
+            json.dump(saved_words, f, indent=2, ensure_ascii=False)
+        
+        update.message.reply_text(
+            get_message('word_saved', lang).format(word),
+            reply_markup=get_main_keyboard(lang),
+            parse_mode=ParseMode.MARKDOWN
+        )
             
     except Exception as e:
         logger.error(f"Error saving word: {e}")
+        error_msg = (
+            "❌ Error saving the word. Please try again later.\n"
+            f"Error details: {str(e)}"
+        )
         update.message.reply_text(
-            "❌ Error saving the word. Please check if your save location is still accessible.",
+            error_msg,
             reply_markup=get_main_keyboard(lang),
             parse_mode=ParseMode.MARKDOWN
         )
 
 def show_saved_command(update: Update, context: CallbackContext) -> None:
-    """Show user's saved words from their save file."""
+    """Show user's saved words and offer to download them."""
     user_id = update.effective_user.id
     lang = get_user_language(user_id)
-    save_path = get_user_save_path(user_id)
+    temp_file = f'data/temp/saved_words_{user_id}.json'
     
-    if not save_path:
-        update.message.reply_text(
-            "⚠️ You need to set up a save location first!\n\n"
-            "Use the /setup_path command followed by your desired save location.\n"
-            "Example: `/setup_path C:/Users/YourName/Documents/saved_words.json`",
-            reply_markup=get_main_keyboard(lang),
-            parse_mode=ParseMode.MARKDOWN
-        )
-        return
-        
     try:
-        if not os.path.exists(save_path):
+        if not os.path.exists(temp_file):
             update.message.reply_text(
-                "You don't have any saved words yet.",
+                get_message('saved_words_empty', lang),
                 reply_markup=get_main_keyboard(lang),
                 parse_mode=ParseMode.MARKDOWN
             )
             return
             
-        with open(save_path, 'r', encoding='utf-8') as f:
-            saved_words = json.load(f)
+        with open(temp_file, 'r', encoding='utf-8') as f:
+            try:
+                saved_words = json.load(f)
+                if not isinstance(saved_words, list):
+                    saved_words = []
+            except json.JSONDecodeError:
+                saved_words = []
             
         if not saved_words:
             update.message.reply_text(
-                "You don't have any saved words yet.",
+                get_message('saved_words_empty', lang),
                 reply_markup=get_main_keyboard(lang),
                 parse_mode=ParseMode.MARKDOWN
             )
             return
             
+        # First send the list as a message
         response = ["📚 *Your saved words:*\n"]
         for item in saved_words:
             word = item['word']
-            syn_count = len(item['synonyms'])
-            ant_count = len(item['antonyms'])
+            syn_count = len(item.get('synonyms', []))
+            ant_count = len(item.get('antonyms', []))
             response.append(f"• *{word}* - {syn_count} synonyms, {ant_count} antonyms")
         
         update.message.reply_text(
@@ -500,11 +559,23 @@ def show_saved_command(update: Update, context: CallbackContext) -> None:
             reply_markup=get_main_keyboard(lang),
             parse_mode=ParseMode.MARKDOWN
         )
+        
+        # Then send the file
+        with open(temp_file, 'rb') as f:
+            update.message.reply_document(
+                document=f,
+                filename=f'saved_words.json',
+                caption="📥 Here's your saved words file. You can save it anywhere on your computer!"
+            )
             
     except Exception as e:
         logger.error(f"Error reading saved words: {e}")
+        error_msg = (
+            "❌ Error reading your saved words. Please try again later.\n"
+            f"Error details: {str(e)}"
+        )
         update.message.reply_text(
-            "❌ Error reading your saved words. Please check if your save location is still accessible.",
+            error_msg,
             reply_markup=get_main_keyboard(lang),
             parse_mode=ParseMode.MARKDOWN
         )

@@ -12,7 +12,7 @@ DEFAULT_LANGUAGE = "ru"  # Changed to Russian as default
 
 # Response settings
 MAX_SYNONYMS_DISPLAY = 10  # Maximum number of synonyms to show at once
-MAX_SAVED_WORDS = 10      # Maximum number of words to save in history
+MAX_SAVED_WORDS = 50      # Maximum number of words to save in file
 
 # Data storage
 USER_DATA_PATH = "data/user_data.json"
@@ -25,6 +25,7 @@ CALLBACK_DATA = {
     'BOTH': 'get_both',
     'SAVE_WORD': 'save_word',
     'VIEW_SAVED': 'view_saved',
+    'DOWNLOAD_SAVED': 'download_saved',  # New callback for downloading saved words
     'SETUP_PATH': 'setup_path',
     'SWITCH_LANG': 'switch_language',
     'BACK': 'back_to_menu'

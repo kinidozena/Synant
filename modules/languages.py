@@ -14,20 +14,19 @@ MESSAGES = {
             "• /synonym <слово> - Найти синонимы\n"
             "• /antonym <слово> - Найти антонимы\n"
             "• /both <слово> - Показать синонимы и антонимы\n"
-            "• /setup_path <путь> - Указать путь для сохранения\n"
             "• /save <слово> - Сохранить слово\n"
             "• /saved - Показать сохранённые слова\n"
             "• /help - Показать это сообщение\n\n"
             "*💾 Сохранение слов:*\n"
-            "1. Сначала укажите путь командой /setup_path\n"
-            "2. Этот путь сохранится даже после перезапуска бота"
+            "1. Используйте /save для сохранения слова\n"
+            "2. Бот отправит вам файл со всеми сохранёнными словами\n"
+            "3. Сохраните файл в любом месте на вашем компьютере"
         ),
         'help': (
             "*🤖 Команды бота:*\n\n"
             "• /synonym <слово> - Найти синонимы\n"
             "• /antonym <слово> - Найти антонимы\n"
             "• /both <слово> - Показать всё\n"
-            "• /setup_path <путь> - Настроить сохранение\n"
             "• /save <слово> - Сохранить слово\n"
             "• /saved - Сохранённые слова\n"
             "• /help - Помощь\n\n"
@@ -37,43 +36,29 @@ MESSAGES = {
             "• Синонимы/антонимы\n"
             "• Примеры использования\n\n"
             "*💾 Сохранение слов:*\n"
-            "1. Используйте /setup_path чтобы указать путь для сохранения\n"
-            "   Пример: `/setup_path C:/Users/ИмяПользователя/Documents/saved_words.json`\n"
-            "2. Этот путь сохранится даже после перезапуска бота\n"
-            "3. После этого используйте /save для сохранения слов\n"
+            "1. Используйте /save для сохранения слова\n"
+            "2. Бот отправит вам файл JSON со всеми сохранёнными словами\n"
+            "3. Сохраните файл в любом месте на вашем компьютере\n"
             "4. Просматривайте сохранённые слова через /saved"
         ),
-        'provide_word': "Пожалуйста, укажите слово после команды. Пример: /{} happy",
-        'synonyms_title': "*📚 Синонимы для {}:*\n",
-        'antonyms_title': "*⚡️ Антонимы для {}:*\n",
-        'no_results': "Извините, не удалось найти информацию для слова '{}'",
-        'no_synonyms': "Синонимы не найдены",
-        'no_antonyms': "Антонимы не найдены",
-        'saved_words_empty': "У вас пока нет сохранённых слов!",
-        'saved_words_title': "*📝 Ваши сохранённые слова:*",
-        'word_stats': "• {} ({} синонимов, {} антонимов)",
-        'current_language': "Текущий язык",
-        'language_changed': "✅ Язык интерфейса изменён на русский",
-        'choose_action': "Выберите действие:",
-        'find_synonyms': "🔍 Найти синонимы",
-        'find_antonyms': "🔄 Найти антонимы",
-        'find_both': "📚 Синонимы и антонимы",
-        'setup_path': "⚙️ Настроить путь",
-        'save_word': "💾 Сохранить слово",
-        'view_saved': "📋 Сохранённые слова",
-        'switch_language': "🌐 Switch to English",
-        'enter_word': "Введите слово для поиска:",
-        'enter_word_save': "Введите слово для сохранения:",
-        'enter_save_path': "Введите путь для сохранения слов:",
-        'back': "Назад",
-        'one_word_only': "Пожалуйста, отправьте только одно слово",
-        'example_title': "\n_Пример использования:_",
-        'no_examples': "Примеры не найдены",
-        'setup_path_first': (
-            "⚠️ Сначала нужно настроить путь для сохранения!\n\n"
-            "Используйте команду /setup_path и укажите путь, куда сохранять слова.\n"
-            "Пример: `/setup_path C:/Users/ИмяПользователя/Documents/saved_words.json`"
-        )
+        'synonyms_btn': "🔄 Синонимы",
+        'antonyms_btn': "⚡️ Антонимы",
+        'both_btn': "🔍 Оба варианта",
+        'save_btn': "💾 Сохранить",
+        'view_saved_btn': "📋 Просмотр",
+        'download_saved_btn': "📥 Скачать",
+        'switch_lang_btn': "🌐 EN/RU",
+        'back_btn': "⬅️ Назад",
+        'provide_word': "Введите слово для {}:",
+        'word_not_found': "❌ Слово не найдено. Проверьте правильность написания.",
+        'one_word_only': "❌ Пожалуйста, введите только одно слово.",
+        'saved_words_empty': "📭 У вас пока нет сохранённых слов.",
+        'saved_words_title': "📚 *Ваши сохранённые слова:*",
+        'word_stats': "• *{}* - {} синонимов, {} антонимов",
+        'word_saved': "✅ Слово '{}' сохранено!",
+        'word_exists': "ℹ️ Слово '{}' уже в списке сохранённых.",
+        'max_words_reached': "⚠️ Достигнут лимит в {} слов. Скачайте текущий список, чтобы начать новый.",
+        'download_ready': "📥 Ваш файл с сохранёнными словами готов к скачиванию!"
     },
     'en': {
         'welcome': (
@@ -85,20 +70,19 @@ MESSAGES = {
             "• /synonym <word> - Find synonyms\n"
             "• /antonym <word> - Find antonyms\n"
             "• /both <word> - Show both synonyms and antonyms\n"
-            "• /setup_path <path> - Set save location\n"
             "• /save <word> - Save a word\n"
             "• /saved - View saved words\n"
             "• /help - Show this help message\n\n"
             "*💾 Saving Words:*\n"
-            "1. First set your save path with /setup_path\n"
-            "2. This path will be remembered even after bot restarts"
+            "1. Use /save to save a word\n"
+            "2. Bot will send you a file with all saved words\n"
+            "3. Save the file anywhere on your computer"
         ),
         'help': (
             "*🤖 Bot Commands:*\n\n"
             "• /synonym <word> - Find synonyms\n"
             "• /antonym <word> - Find antonyms\n"
             "• /both <word> - Show both\n"
-            "• /setup_path <path> - Setup saving\n"
             "• /save <word> - Save word\n"
             "• /saved - View saved\n"
             "• /help - Show help\n\n"
@@ -108,43 +92,29 @@ MESSAGES = {
             "• Synonyms/antonyms\n"
             "• Usage examples\n\n"
             "*💾 Saving Words:*\n"
-            "1. Use /setup_path to set your save location\n"
-            "   Example: `/setup_path C:/Users/YourName/Documents/saved_words.json`\n"
-            "2. This path will be remembered even after bot restarts\n"
-            "3. Then use /save to save words\n"
+            "1. Use /save to save a word\n"
+            "2. Bot will send you a JSON file with all saved words\n"
+            "3. Save the file anywhere on your computer\n"
             "4. View your saved words with /saved"
         ),
-        'provide_word': "Please provide a word after the command. Example: /{} happy",
-        'synonyms_title': "*📚 Synonyms for {}:*\n",
-        'antonyms_title': "*⚡️ Antonyms for {}:*\n",
-        'no_results': "Sorry, couldn't find any information for '{}'",
-        'no_synonyms': "No synonyms found",
-        'no_antonyms': "No antonyms found",
-        'saved_words_empty': "You don't have any saved words yet!",
-        'saved_words_title': "*📝 Your saved words:*",
-        'word_stats': "• {} ({} synonyms, {} antonyms)",
-        'current_language': "Current language",
-        'language_changed': "✅ Interface language changed to English",
-        'choose_action': "Choose an action:",
-        'find_synonyms': "🔍 Find Synonyms",
-        'find_antonyms': "🔄 Find Antonyms",
-        'find_both': "📚 Synonyms & Antonyms",
-        'setup_path': "⚙️ Setup Path",
-        'save_word': "💾 Save Word",
-        'view_saved': "📋 Saved Words",
-        'switch_language': "🌐 Сменить на русский",
-        'enter_word': "Enter a word to search:",
-        'enter_word_save': "Enter a word to save:",
-        'enter_save_path': "Enter the path to save words:",
-        'back': "Back",
-        'one_word_only': "Please send only one word",
-        'example_title': "\n_Example usage:_",
-        'no_examples': "No examples found",
-        'setup_path_first': (
-            "⚠️ You need to set up a save location first!\n\n"
-            "Use the /setup_path command followed by where you want to save words.\n"
-            "Example: `/setup_path C:/Users/YourName/Documents/saved_words.json`"
-        )
+        'synonyms_btn': "🔄 Synonyms",
+        'antonyms_btn': "⚡️ Antonyms",
+        'both_btn': "🔍 Both",
+        'save_btn': "💾 Save",
+        'view_saved_btn': "📋 View",
+        'download_saved_btn': "📥 Download",
+        'switch_lang_btn': "🌐 EN/RU",
+        'back_btn': "⬅️ Back",
+        'provide_word': "Enter a word to {}:",
+        'word_not_found': "❌ Word not found. Please check the spelling.",
+        'one_word_only': "❌ Please enter only one word.",
+        'saved_words_empty': "📭 You don't have any saved words yet.",
+        'saved_words_title': "📚 *Your saved words:*",
+        'word_stats': "• *{}* - {} synonyms, {} antonyms",
+        'word_saved': "✅ Word '{}' has been saved!",
+        'word_exists': "ℹ️ Word '{}' is already in your saved list.",
+        'max_words_reached': "⚠️ Maximum limit of {} words reached. Download current list to start a new one.",
+        'download_ready': "📥 Your saved words file is ready for download!"
     }
 }
 
